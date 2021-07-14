@@ -1,4 +1,4 @@
-package com.example.interview.rest.exception;
+package com.example.interview.rest.exceptions;
 
 public class DivideByZeroException extends RuntimeException{
     public DivideByZeroException() {

@@ -1,5 +1,5 @@
 
-package com.example.interview.soap;
+package com.example.interview.soap.calculator;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="MultiplyResult" type="{http://www.w3.org/2001/XMLSchema}int"/&gt;
+ *         &lt;element name="DivideResult" type="{http://www.w3.org/2001/XMLSchema}int"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -29,28 +29,28 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "multiplyResult"
+    "divideResult"
 })
-@XmlRootElement(name = "MultiplyResponse")
-public class MultiplyResponse {
+@XmlRootElement(name = "DivideResponse")
+public class DivideResponse {
 
-    @XmlElement(name = "MultiplyResult")
-    protected int multiplyResult;
+    @XmlElement(name = "DivideResult")
+    protected int divideResult;
 
     /**
-     * Gets the value of the multiplyResult property.
+     * Gets the value of the divideResult property.
      * 
      */
-    public int getMultiplyResult() {
-        return multiplyResult;
+    public int getDivideResult() {
+        return divideResult;
     }
 
     /**
-     * Sets the value of the multiplyResult property.
+     * Sets the value of the divideResult property.
      * 
      */
-    public void setMultiplyResult(int value) {
-        this.multiplyResult = value;
+    public void setDivideResult(int value) {
+        this.divideResult = value;
     }
 
 }

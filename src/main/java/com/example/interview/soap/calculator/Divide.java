@@ -1,5 +1,5 @@
 
-package com.example.interview.soap;
+package com.example.interview.soap.calculator;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
