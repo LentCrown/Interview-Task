@@ -1,8 +1,8 @@
-package com.example.interview.rest;
+package com.example.interview.rest.exceptions;
 
 import com.example.interview.dto.ExceptionResponse;
-import com.example.interview.rest.exception.DivideByZeroException;
-import com.example.interview.rest.exception.SkippedArgumentException;
+import com.example.interview.rest.exceptions.DivideByZeroException;
+import com.example.interview.rest.exceptions.SkippedArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
