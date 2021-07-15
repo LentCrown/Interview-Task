@@ -10,16 +10,20 @@
     </parent>
     <groupId>com.example</groupId>
     <artifactId>Interview</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>Interview Task</name>
-    <description>Demo project for Spring Boot</description>
+    <name>Interview_Task</name>
+    <description>Adapter for SOAP web-service to call it with REST controller</description>
+    <version>0.0.1</version>
     <properties>
         <java.version>11</java.version>
     </properties>
+
     <dependencies>
+
+        <!--Spring Boot-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>2.5.2</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -27,23 +31,83 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>2.0.1.Final</version>
         </dependency>
+        <dependency>
+            <groupId>jakarta.jws</groupId>
+            <artifactId>jakarta.jws-api</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jvnet.jaxb2.maven2</groupId>
+            <artifactId>maven-jaxb2-plugin</artifactId>
+            <version>0.14.0</version>
+        </dependency>
+
+        <!--Utilities-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.8.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.8.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.20</version>
+        </dependency>
+
+        <!--Tests-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <version>2.5.2</version>
             <scope>test</scope>
         </dependency>
-    </dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13</version>
+            <scope>test</scope>
+        </dependency>
 
+    </dependencies>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.jvnet.jaxb2.maven2</groupId>
+                <artifactId>maven-jaxb2-plugin</artifactId>
+                <version>0.14.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <schemaLanguage>WSDL</schemaLanguage>
+                    <generateDirectory>${project.basedir}/src/main/java</generateDirectory>
+                    <generatePackage>com.example.interview.soap.calculator</generatePackage>
+                    <schemas>
+                        <schema>
+                            <url>http://www.dneonline.com/calculator.asmx?WSDL</url>
+                        </schema>
+                    </schemas>
+                    <episode>false</episode>
+                </configuration>
             </plugin>
         </plugins>
     </build>
