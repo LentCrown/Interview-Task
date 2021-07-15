@@ -1,14 +1,14 @@
 package com.example.interview.dto;
 
-import lombok.AllArgsConstructor;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.sql.Timestamp;
-
 @Data
-@AllArgsConstructor
 public class BaseResponse {
-    private final Timestamp timestamp;
+    @ApiModelProperty(notes = "Time of generated response")
+    private final String date;
+    @ApiModelProperty(notes = "Status of invoked operation")
     private final String status;
+    @ApiModelProperty(notes = "Results of operation")
     private final Result result;
 }

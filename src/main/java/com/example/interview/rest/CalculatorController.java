@@ -1,5 +1,6 @@
 package com.example.interview.rest;
 
+import com.example.interview.services.CalculatorService;
 import com.example.interview.soap.CalculatorServiceClient;
 import com.example.interview.dto.BaseRequest;
 import com.example.interview.dto.BaseResponse;
@@ -10,72 +11,116 @@ import com.example.interview.soap.calculator.AddResponse;
 import com.example.interview.soap.calculator.DivideResponse;
 import com.example.interview.soap.calculator.MultiplyResponse;
 import com.example.interview.soap.calculator.SubtractResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 
 @RestController
 @RequestMapping("/calculator")
+@Api(value = "calculator")
 public class CalculatorController {
     private static final String SUCCESS_STATUS = "success";
     private static final String ERROR_STATUS = "error";
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private CalculatorServiceClient calculatorServiceClient;
+    private final CalculatorService calculatorService;
 
-    public CalculatorController(CalculatorServiceClient calculatorServiceClient) {
-        this.calculatorServiceClient = calculatorServiceClient;
+    public CalculatorController(CalculatorService calculatorService) {
+        this.calculatorService = calculatorService;
     }
 
-    @GetMapping
+    @GetMapping(produces = "application/json")
+    @ApiOperation(value = "Test connection", response = Result.class)
     public BaseResponse showStatus() {
         logger.info("Testing connection..");
-        return new BaseResponse(new Timestamp(System.currentTimeMillis()),SUCCESS_STATUS, new Result(0,0,0));
+        return new BaseResponse(Instant.now().toString(),SUCCESS_STATUS,
+                new Result(0,0,0));
     }
 
-    @GetMapping("/add")
+    @PostMapping(value = "/add", produces = "application/json")
+    @ApiOperation(value = "Add two numbers", response = Result.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully completed operation"),
+            @ApiResponse(code = 400, message = "Bad request, check parameters"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     public BaseResponse add(@RequestBody BaseRequest request) {
-        if (request.getNumber1()==null || request.getNumber2()==null) throw new SkippedArgumentException("You forgot to specify argument(s)");
+        logger.info("Invoking add operation..");
+        if (request.getNumber1()==null || request.getNumber2()==null)
+            throw new SkippedArgumentException("You forgot to specify argument(s)");
         int number1 = request.getNumber1();
         int number2 = request.getNumber2();
-        logger.info("Attempt to do operation: " + number1 + "+" + number2);
-        AddResponse response = calculatorServiceClient.add(number1, number2);
-        return new BaseResponse(new Timestamp(System.currentTimeMillis()),SUCCESS_STATUS, new Result(number1,number2, response.getAddResult()));
+        int result = calculatorService.add(number1, number2);
+        logger.info("Web-service invoking is OK");
+        logger.debug(number1 + " + " + number2 + " = " + result);
+        return new BaseResponse(Instant.now().toString(),SUCCESS_STATUS,
+                new Result(number1,number2,result));
     }
 
-    @GetMapping("/div")
+    @PostMapping(value = "/div", produces = "application/json")
+    @ApiOperation(value = "Divide two numbers", response = Result.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully completed operation"),
+            @ApiResponse(code = 400, message = "Bad request, check parameters"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     public BaseResponse divide(@RequestBody BaseRequest request) {
-        if (request.getNumber1()==null || request.getNumber2()==null) throw new SkippedArgumentException("You forgot to specify argument(s)");
+        logger.info("Invoking divide operation..");
+        if (request.getNumber1()==null || request.getNumber2()==null)
+            throw new SkippedArgumentException("You forgot to specify argument(s)");
         int number1 = request.getNumber1();
         int number2 = request.getNumber2();
-        logger.info("Attempt to do operation: " + number1 + "/" + number2);
         if (number2 == 0) throw new DivideByZeroException();
-        DivideResponse response = calculatorServiceClient.divide(number1, number2);
-        return new BaseResponse(new Timestamp(System.currentTimeMillis()),SUCCESS_STATUS, new Result(number1,number2, response.getDivideResult()));
+        int result = calculatorService.divide(number1, number2);
+        logger.info("Web-service invoking is OK");
+        logger.debug(number1 + " / " + number2 + " = " + result);
+        return new BaseResponse(Instant.now().toString(),SUCCESS_STATUS,
+                new Result(number1,number2,result));
     }
 
-    @GetMapping("/mul")
+    @PostMapping(value = "/mul", produces = "application/json")
+    @ApiOperation(value = "Multiply two numbers", response = Result.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully completed operation"),
+            @ApiResponse(code = 400, message = "Bad request, check parameters"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     public BaseResponse multiply(@RequestBody BaseRequest request) {
-        if (request.getNumber1()==null || request.getNumber2()==null) throw new SkippedArgumentException("You forgot to specify argument(s)");
+        logger.info("Invoking multiply operation..");
+        if (request.getNumber1()==null || request.getNumber2()==null)
+            throw new SkippedArgumentException("You forgot to specify argument(s)");
         int number1 = request.getNumber1();
         int number2 = request.getNumber2();
-        logger.info("Attempt to do operation: " + number1 + "*" + number2);
-        MultiplyResponse response = calculatorServiceClient.multiply(number1, number2);
-        return new BaseResponse(new Timestamp(System.currentTimeMillis()),SUCCESS_STATUS, new Result(number1,number2,response.getMultiplyResult()));
+        int result = calculatorService.multiply(number1, number2);
+        logger.info("Web-service invoking is OK");
+        logger.debug(number1 + " * " + number2 + " = " + result);
+        return new BaseResponse(Instant.now().toString(),SUCCESS_STATUS,
+                new Result(number1,number2,result));
     }
 
-    @GetMapping("/sub")
+    @PostMapping(value = "/sub", produces = "application/json")
+    @ApiOperation(value = "Subtract two numbers", response = Result.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully completed operation"),
+            @ApiResponse(code = 400, message = "Bad request, check parameters"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     public BaseResponse subtract(@RequestBody BaseRequest request) {
-        if (request.getNumber1()==null || request.getNumber2()==null) throw new SkippedArgumentException("You forgot to specify argument(s)");
+        logger.info("Invoking subtract operation..");
+        if (request.getNumber1()==null || request.getNumber2()==null)
+            throw new SkippedArgumentException("You forgot to specify argument(s)");
         int number1 = request.getNumber1();
         int number2 = request.getNumber2();
-        logger.info("Attempt to do operation: " + number1 + "-" + number2);
-        SubtractResponse response = calculatorServiceClient.subtract(number1, number2);
-        return new BaseResponse(new Timestamp(System.currentTimeMillis()),SUCCESS_STATUS, new Result(number1,number2,response.getSubtractResult()));
+        int result = calculatorService.subtract(number1, number2);
+        logger.info("Web-service invoking is OK");
+        logger.debug(number1 + " - " + number2 + " = " + result);
+        return new BaseResponse(Instant.now().toString(),SUCCESS_STATUS,
+                new Result(number1,number2,result));
     }
 }
